@@ -11,6 +11,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  # APP名称
+  APP_NAME: FlutterDevToys
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -30,7 +34,7 @@ jobs:
         run: |
           flutter config --enable-macos-desktop
           flutter build macos
-          ditto -c -k --sequesterRsrc --keepParent ./build/macos/Build/Products/Release/*.app FlutterDevToys-macOS.zip
+          ditto -c -k --sequesterRsrc --keepParent ./build/macos/Build/Products/Release/*.app ${{APP_NAME}}-macOS.zip
       
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -38,3 +42,28 @@ jobs:
         with:
           files: |
             FlutterDevToys-macOS.zip
+            
+  build-windows:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          
+      - name: Build
+        run: |
+          flutter config --enable-windows-desktop
+          flutter build windows
+          Compress-Archive -Path .\Release\* -DestinationPath ${{APP_NAME}}-windows.zip
+      
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ${{APP_NAME}}-windows.zip
