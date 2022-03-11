@@ -34,14 +34,14 @@ jobs:
         run: |
           flutter config --enable-macos-desktop
           flutter build macos
-          ditto -c -k --sequesterRsrc --keepParent ./build/macos/Build/Products/Release/*.app ${{APP_NAME}}-macOS.zip
+          ditto -c -k --sequesterRsrc --keepParent ./build/macos/Build/Products/Release/*.app ${{ env.APP_NAME }}-macOS.zip
       
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            FlutterDevToys-macOS.zip
+            ${{ env.APP_NAME }}-macOS.zip
             
   build-windows:
     # The type of runner that the job will run on
@@ -59,11 +59,11 @@ jobs:
         run: |
           flutter config --enable-windows-desktop
           flutter build windows
-          Compress-Archive -Path .\Release\* -DestinationPath ${{APP_NAME}}-windows.zip
+          Compress-Archive -Path .\Release\* -DestinationPath ${{ env.APP_NAME }}-windows.zip
       
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ${{APP_NAME}}-windows.zip
+            ${{ env.APP_NAME }}-windows.zip
