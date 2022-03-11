@@ -43,6 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         child: const Text('二维码'),
       ),
+      ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/url_encode');
+        },
+        child: const Text('URL编码/解码'),
+      ),
     ];
   }
 }
