@@ -59,7 +59,7 @@ jobs:
         run: |
           flutter config --enable-windows-desktop
           flutter build windows
-          Compress-Archive -Path .\Release\* -DestinationPath ${{ env.APP_NAME }}-windows.zip
+          Compress-Archive -Path .\build\windows\runner\Release\* -DestinationPath ${{ env.APP_NAME }}-windows.zip
       
       - name: Release
         uses: softprops/action-gh-release@v1
