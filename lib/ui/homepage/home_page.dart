@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dev_toys/ui/format/json_format.dart';
 import 'package:flutter_dev_toys/ui/homepage/model.dart';
 import 'package:flutter_dev_toys/utils/device_type.dart';
 
 import '../../main.dart';
+import '../encode/base64_encode.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -14,12 +16,21 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   static const List<BtnGroup> data = [
     BtnGroup(
-        '转换',
-        [
-          BtnItem('URL编码/解码', '/url_encode'),
-          BtnItem('二维码', '/qrcode'),
-        ],
-        icon: Icons.sync_alt)
+      '转换',
+      [
+        BtnItem('URL编码/解码', '/url_encode'),
+        BtnItem(Base64EncodePage.title, '/base64_encode'),
+        BtnItem('二维码', '/qrcode'),
+      ],
+      icon: Icons.sync_alt,
+    ),
+    BtnGroup(
+      '格式化',
+      [
+        BtnItem(JsonFormatPage.title, '/json_format'),
+      ],
+      icon: Icons.subject,
+    ),
   ];
   List<String> pageNames =
       data.expand((group) => group.children.map((e) => e.routeName)).toList();

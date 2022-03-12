@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dev_toys/ui/url_encode.dart';
+import 'package:flutter_dev_toys/ui/format/json_format.dart';
 
+import 'ui/encode/base64_encode.dart';
+import 'ui/encode/qrcode.dart';
+import 'ui/encode/url_encode.dart';
 import 'ui/homepage/home_page.dart';
-import 'ui/qrcode.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,8 +13,10 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   static final Map<String, Widget Function(BuildContext)> routes = {
-    "/qrcode": (context) => QRCodePage(),
-    "/url_encode": (context) => const URLEncodePage()
+    "/qrcode": (context) => const QRCodePage(),
+    "/url_encode": (context) => const URLEncodePage(),
+    "/base64_encode": (context) => const Base64EncodePage(),
+    '/json_format': (context) => const JsonFormatPage()
   };
 
   // This widget is the root of your application.

@@ -1,14 +1,25 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dev_toys/utils/device_type.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QRCodePage extends StatefulWidget {
+  const QRCodePage({Key? key}) : super(key: key);
+
   @override
   _QRCodePageState createState() => _QRCodePageState();
 }
 
 class _QRCodePageState extends State<QRCodePage> {
   String _qrcodeContent = '';
+  GlobalKey qrCode = GlobalKey();
 
   final _controller = TextEditingController();
   late ScrollController _pageScrollerController;
@@ -63,21 +74,29 @@ class _QRCodePageState extends State<QRCodePage> {
                   ),
                 ),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    if (_controller.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text(
-                        '请先填写内容',
-                        style: TextStyle(fontFamily: 'Noto Sans'),
-                      )));
-                    } else {
-                      setState(() {
-                        _qrcodeContent = _controller.text;
-                      });
-                    }
-                  },
-                  child: const Text('生成二维码')),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        if (_controller.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('请先填写内容')));
+                        } else {
+                          setState(() {
+                            _qrcodeContent = _controller.text;
+                          });
+                        }
+                      },
+                      child: const Text('生成二维码')),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: ElevatedButton(
+                        onPressed: _qrcodeContent.isNotEmpty ? onSave : null,
+                        child: const Text('保存二维码')),
+                  ),
+                ],
+              ),
               if (_qrcodeContent.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -86,10 +105,13 @@ class _QRCodePageState extends State<QRCodePage> {
                     children: [
                       Expanded(
                         flex: 1,
-                        child: QrImage(
-                          data: _qrcodeContent,
-                          version: QrVersions.auto,
-                          backgroundColor: Colors.white,
+                        child: RepaintBoundary(
+                          key: qrCode,
+                          child: QrImage(
+                            data: _qrcodeContent,
+                            version: QrVersions.auto,
+                            backgroundColor: Colors.white,
+                          ),
                         ),
                       ),
                       if (!DeviceType.isHandSet(context))
@@ -111,6 +133,41 @@ class _QRCodePageState extends State<QRCodePage> {
         ),
       ),
     );
+  }
+
+  onSave() async {
+    try {
+      final data = await createQRCodeImg();
+      final dir = await getDownloadsDirectory();
+      final path =
+          "${dir?.path}${Platform.pathSeparator}${DateTime.now().millisecondsSinceEpoch}.png";
+      final file = File(path);
+      await file.writeAsBytes(data);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('保存地址：$path')));
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+
+  createQRCodeImg() async {
+    try {
+      final boundary =
+          qrCode.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary != null) {
+        final image =
+            await boundary.toImage(pixelRatio: window.devicePixelRatio);
+        ByteData? byteData =
+            await image.toByteData(format: ImageByteFormat.png);
+        return byteData?.buffer.asUint8List();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    return null;
   }
 
   AppBar? _buildAppBar() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/device_type.dart';
+import '../../utils/device_type.dart';
 
 class URLEncodePage extends StatefulWidget {
   const URLEncodePage({Key? key}) : super(key: key);
@@ -71,23 +71,16 @@ class _URLEncodePageState extends State<URLEncodePage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_controller.text.isEmpty) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                                content: Text(
-                          '请先填写内容',
-                          style: TextStyle(fontFamily: 'Noto Sans'),
-                        )));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('请先填写内容')));
                       }
                       setState(() {
                         try {
                           _content = Uri.encodeComponent(_controller.text);
                         } catch (e) {
                           _content = "";
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                            e.toString(),
-                            style: const TextStyle(fontFamily: 'Noto Sans'),
-                          )));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.toString())));
                         }
                       });
                     },
@@ -110,12 +103,8 @@ class _URLEncodePageState extends State<URLEncodePage> {
                             _content = Uri.decodeComponent(_controller.text);
                           } catch (e) {
                             _content = "";
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                e.toString(),
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                            ));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.toString())));
                           }
                         });
                       },
@@ -144,13 +133,13 @@ class _URLEncodePageState extends State<URLEncodePage> {
   }
 
   AppBar? _buildAppBar() {
-    if (DeviceType.isMobile){
+    if (DeviceType.isMobile) {
       return null;
     }
     return AppBar(
       // Here we take the value from the MyHomePage object that was created by
       // the App.build method, and use it to set our appbar title.
-      title: const Text('URL编码/解码'),
+      title: const Text('URL编/解码'),
     );
   }
 }
