@@ -11,6 +11,19 @@ class _URLEncodePageState extends State<URLEncodePage> {
   String _content = '';
 
   final _controller = TextEditingController();
+  late ScrollController _pageScrollerController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageScrollerController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageScrollerController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +40,7 @@ class _URLEncodePageState extends State<URLEncodePage> {
         title: const Text('URL编码/解码'),
       ),
       body: SingleChildScrollView(
+        controller: _pageScrollerController,
         child: Center(
           // Center is a layout widget. It takes a single child and positions it
           // in the middle of the parent.

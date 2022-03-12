@@ -10,6 +10,19 @@ class _QRCodePageState extends State<QRCodePage> {
   String _qrcodeContent = '';
 
   final _controller = TextEditingController();
+  late ScrollController _pageScrollerController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageScrollerController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageScrollerController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +39,7 @@ class _QRCodePageState extends State<QRCodePage> {
         title: const Text('二维码'),
       ),
       body: SingleChildScrollView(
+        controller: _pageScrollerController,
         child: Center(
           // Center is a layout widget. It takes a single child and positions it
           // in the middle of the parent.
@@ -60,23 +74,38 @@ class _QRCodePageState extends State<QRCodePage> {
                         '请先填写内容',
                         style: TextStyle(fontFamily: 'Noto Sans'),
                       )));
+                    } else {
+                      setState(() {
+                        _qrcodeContent = _controller.text;
+                      });
                     }
-                    setState(() {
-                      _qrcodeContent = _controller.text;
-                    });
                   },
                   child: const Text('生成二维码')),
               if (_qrcodeContent.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: QrImage(
-                    data: _qrcodeContent,
-                    version: QrVersions.auto,
-                    backgroundColor: Colors.white,
-                    size: 400,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      QrImage(
+                        data: _qrcodeContent,
+                        version: QrVersions.auto,
+                        backgroundColor: Colors.white,
+                        size: 400,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: Container(
+                              color: Colors.black38,
+                              padding: const EdgeInsets.all(8),
+                              child: Text(_qrcodeContent)),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-              Text(_qrcodeContent)
             ],
           ),
         ),
