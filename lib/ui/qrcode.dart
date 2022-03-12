@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dev_toys/utils/device_type.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QRCodePage extends StatefulWidget {
@@ -33,11 +34,7 @@ class _QRCodePageState extends State<QRCodePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text('二维码'),
-      ),
+      appBar: _buildAppBar(),
       body: SingleChildScrollView(
         controller: _pageScrollerController,
         child: Center(
@@ -87,22 +84,25 @@ class _QRCodePageState extends State<QRCodePage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      QrImage(
-                        data: _qrcodeContent,
-                        version: QrVersions.auto,
-                        backgroundColor: Colors.white,
-                        size: 400,
-                      ),
                       Expanded(
                         flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Container(
-                              color: Colors.black38,
-                              padding: const EdgeInsets.all(8),
-                              child: Text(_qrcodeContent)),
+                        child: QrImage(
+                          data: _qrcodeContent,
+                          version: QrVersions.auto,
+                          backgroundColor: Colors.white,
                         ),
-                      )
+                      ),
+                      if (!DeviceType.isHandSet(context))
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: Container(
+                                color: Colors.black38,
+                                padding: const EdgeInsets.all(8),
+                                child: Text(_qrcodeContent)),
+                          ),
+                        )
                     ],
                   ),
                 ),
@@ -110,6 +110,17 @@ class _QRCodePageState extends State<QRCodePage> {
           ),
         ),
       ),
+    );
+  }
+
+  AppBar? _buildAppBar() {
+    if (DeviceType.isMobile) {
+      return null;
+    }
+    return AppBar(
+      // Here we take the value from the MyHomePage object that was created by
+      // the App.build method, and use it to set our appbar title.
+      title: const Text('二维码'),
     );
   }
 }

@@ -74,17 +74,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: Noto Sans
-      fonts:
-        - asset: fonts/NotoSans-Regular.ttf
-        - asset: fonts/NotoSans-Italic.ttf
-          style: italic
-        - asset: fonts/NotoSans-BoldItalic.ttf
-          style: italic
-          weight: 700
-        - asset: fonts/NotoSans-Bold.ttf
-          weight: 700
+#  fonts:
+#    - family: NotoSansSC
+#      fonts:
+#        - asset: fonts/NotoSansSC-Regular.otf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

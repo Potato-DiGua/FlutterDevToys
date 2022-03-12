@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dev_toys/ui/homepage/model.dart';
+import 'package:flutter_dev_toys/utils/device_type.dart';
 
 import '../../main.dart';
 
@@ -28,6 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<bool> expandState = List.generate(data.length, (index) => false);
 
   int index = 0;
+  bool showDrawer = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,31 +37,30 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    showDrawer = DeviceType.isHandSet(context);
     return Scaffold(
       appBar: _buildAppBar(),
       body: Row(
-        children: [
-          _buildSideBar(context),
-          _buildContent()
-        ],
+        children: [if (!showDrawer) _buildSideBar(context), _buildContent()],
       ),
+      drawer: Drawer(child: _buildSideBar(context)),
     );
   }
 
   Container _buildSideBar(BuildContext context) {
     return Container(
-          color: Colors.black26,
-          width: 300,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: _buildNavigation(context),
-          ),
-        );
+      color: Colors.black26,
+      width: 300,
+      padding: EdgeInsets.fromLTRB(8, MediaQuery.of(context).padding.top, 8, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _buildNavigation(context),
+      ),
+    );
   }
 
   AppBar? _buildAppBar() {
-    if (Platform.isWindows) {
+    if (!showDrawer) {
       return null;
     } else {
       return AppBar(
@@ -81,13 +80,8 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: ListTile(
           leading: group.icon != null ? Icon(group.icon) : null,
-          title: Text(
-            group.title,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.merge(const TextStyle(fontWeight: FontWeight.bold)),
-          ),
+          title:
+              Text(group.title, style: Theme.of(context).textTheme.titleMedium),
           trailing:
               Icon(expandState[i] ? Icons.expand_less : Icons.expand_more),
           onTap: () {
@@ -116,6 +110,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       setState(() {
                         index = find;
                       });
+                      if (showDrawer) {
+                        Navigator.of(context).pop();
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      }
                     }
                   },
                 ),

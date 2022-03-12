@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/device_type.dart';
+
 class URLEncodePage extends StatefulWidget {
   const URLEncodePage({Key? key}) : super(key: key);
 
@@ -34,11 +36,7 @@ class _URLEncodePageState extends State<URLEncodePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text('URL编码/解码'),
-      ),
+      appBar: _buildAppBar(),
       body: SingleChildScrollView(
         controller: _pageScrollerController,
         child: Center(
@@ -113,10 +111,11 @@ class _URLEncodePageState extends State<URLEncodePage> {
                           } catch (e) {
                             _content = "";
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                              e.toString(),
-                              style: const TextStyle(fontFamily: 'Noto Sans'),
-                            )));
+                              content: Text(
+                                e.toString(),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
+                            ));
                           }
                         });
                       },
@@ -141,6 +140,17 @@ class _URLEncodePageState extends State<URLEncodePage> {
           ),
         ),
       ),
+    );
+  }
+
+  AppBar? _buildAppBar() {
+    if (DeviceType.isMobile){
+      return null;
+    }
+    return AppBar(
+      // Here we take the value from the MyHomePage object that was created by
+      // the App.build method, and use it to set our appbar title.
+      title: const Text('URL编码/解码'),
     );
   }
 }
