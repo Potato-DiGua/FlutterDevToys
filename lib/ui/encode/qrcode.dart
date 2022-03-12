@@ -138,9 +138,13 @@ class _QRCodePageState extends State<QRCodePage> {
   onSave() async {
     try {
       final data = await createQRCodeImg();
-      final dir = await getDownloadsDirectory();
+      var dir = await getDownloadsDirectory();
+      dir ??= await getApplicationDocumentsDirectory();
+      if ((await dir.exists()) == false) {
+        await dir.create();
+      }
       final path =
-          "${dir?.path}${Platform.pathSeparator}${DateTime.now().millisecondsSinceEpoch}.png";
+          "${dir.path}${Platform.pathSeparator}${DateTime.now().millisecondsSinceEpoch}.png";
       final file = File(path);
       await file.writeAsBytes(data);
       ScaffoldMessenger.of(context)

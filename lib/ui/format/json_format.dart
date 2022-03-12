@@ -115,25 +115,26 @@ class _JsonFormatPageState extends State<JsonFormatPage> {
               textStyle: const TextStyle(fontSize: 18),
             ),
           ),
-          Positioned(
-            top: 8,
-            right: 8,
-            child: IconButton(
-              splashRadius: 28,
-                onPressed: () {
-                  try {
-                    Clipboard.setData(ClipboardData(text: _content));
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text('复制成功')));
-                  } catch (e) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(e.toString())));
-                  }
-                },
-                icon: const Icon(
-                  Icons.copy,
-                )),
-          )
+          if (_content.isNotEmpty)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: IconButton(
+                  splashRadius: 28,
+                  onPressed: () {
+                    try {
+                      Clipboard.setData(ClipboardData(text: _content));
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(const SnackBar(content: Text('复制成功')));
+                    } catch (e) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(e.toString())));
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.copy,
+                  )),
+            )
         ],
       ),
     );
