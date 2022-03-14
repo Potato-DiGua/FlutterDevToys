@@ -1,8 +1,8 @@
 ![Download](https://img.shields.io/github/downloads/Potato-DiGua/FlutterDevToys/total)
 
-# flutter_dev_toys
+# FlutterDevToys
 
-A new Flutter project.
+A tool for developers.
 
 ## Getting Started
 
