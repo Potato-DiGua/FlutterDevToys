@@ -3,10 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/darcula.dart';
 
 import '../../utils/device_type.dart';
+import 'json_view.dart';
 
 class JsonFormatPage extends StatefulWidget {
   static const title = 'JSON格式化';
@@ -98,23 +98,12 @@ class _JsonFormatPageState extends State<JsonFormatPage> {
       child: Stack(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: const BoxDecoration(
-                color: Colors.black38,
-                borderRadius: BorderRadius.all(Radius.circular(8))),
-            width: double.infinity,
-            child: HighlightView(
-              // The original code to be highlighted
-              _content,
-              // Specify language
-              // It is recommended to give it a value for performance
-              language: 'json',
-              // Specify highlight theme
-              // All available themes are listed in `themes` folder
-              theme: theme,
-              textStyle: const TextStyle(fontSize: 18),
-            ),
-          ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: const BoxDecoration(
+                  color: Colors.black38,
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+              width: double.infinity,
+              child: JsonView(_content)),
           if (_content.isNotEmpty)
             Positioned(
               top: 8,
@@ -153,7 +142,7 @@ class _JsonFormatPageState extends State<JsonFormatPage> {
       } catch (e) {
         _content = "";
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+            .showSnackBar(SnackBar(content: Text('json解析失败:$e')));
       }
     });
   }
