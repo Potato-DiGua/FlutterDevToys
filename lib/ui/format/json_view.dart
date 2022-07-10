@@ -13,15 +13,13 @@ class JsonView extends StatelessWidget {
     if (jsonText?.isEmpty ?? false) {
       return Container();
     }
-
     final json = jsonDecode(jsonText!);
-    List<Widget> views = [];
     return _buildMapView(null, json, 1);
   }
 
   Widget _buildBaseValue(String? key, dynamic value, int level) {
     if (value is String) {
-      return _buildValueView(key!, value, level);
+      return _buildValueView(key!, '"$value"', level);
     } else if (value is int) {
       return _buildValueView(key!, value.toString(), level,
           color: Colors.orange);
@@ -40,7 +38,7 @@ class JsonView extends StatelessWidget {
   Widget _buildValueView(String key, String value, int level,
       {Color color = Colors.white}) {
     return Padding(
-      padding: EdgeInsets.only(left: space * level),
+      padding: EdgeInsets.only(left: space * level, top: 3, bottom: 3),
       child: Row(children: [
         _buildKeyView(key),
         const Text(":  "),
